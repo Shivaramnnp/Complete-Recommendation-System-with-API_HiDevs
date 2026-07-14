@@ -1,0 +1,144 @@
+{
+	"info": {
+		"_postman_id": "4c94d12a-6058-4bb4-ac25-78e72251a2eb",
+		"name": "Skills-Based Recommender System API",
+		"description": "Production endpoints mapping for user profiles skills-based recommendations engine.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "System Health Diagnostic",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"health"
+					]
+				},
+				"description": "Exposes database status checks, caches load keys counts, and performance latency indicators."
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Recommendations",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-Key",
+						"value": "portfolio-secret-api-key",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/recommend/1?algorithm=hybrid&k=5&apply_reranking=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"recommend",
+						"1"
+					],
+					"query": [
+						{
+							"key": "algorithm",
+							"value": "hybrid"
+						},
+						{
+							"key": "k",
+							"value": "5"
+						},
+						{
+							"key": "apply_reranking",
+							"value": "true"
+						}
+					]
+				},
+				"description": "Requests custom recommendations (hybrid, content_based, collaborative, popularity) for user_id = 1."
+			},
+			"response": []
+		},
+		{
+			"name": "Submit Interaction Feedback",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-Key",
+						"value": "portfolio-secret-api-key",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": 1,\n    \"content_id\": 10,\n    \"type\": \"click\",\n    \"rating\": 4.5\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/feedback",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"feedback"
+					]
+				},
+				"description": "Persists a new user-content interaction rating in SQLite database. This event invalidates the recommendation cache for user_id = 1."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Model Evaluations metrics",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-Key",
+						"value": "portfolio-secret-api-key",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/metrics?k=5&test_ratio=0.25",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"metrics"
+					],
+					"query": [
+						{
+							"key": "k",
+							"value": "5"
+						},
+						{
+							"key": "test_ratio",
+							"value": "0.25"
+						}
+					]
+				},
+				"description": "Calculates evaluation benchmarks offline using 80/20 train-test validation splits."
+			},
+			"response": []
+		}
+	],
+	"event": [],
+	"variable": []
+}

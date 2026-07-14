@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  recommender-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recommender_api_service
+    ports:
+      - "8000:8000"
+    environment:
+      - RECOMMENDER_API_KEY=portfolio-secret-api-key
+      - CACHE_TTL_SECONDS=600
+      - DATABASE_URL=sqlite:///./data/skills_recommendation.db
+      - ENVIRONMENT=production
+    volumes:
+      - recommender-db:/app/data
+    restart: always
+
+volumes:
+  recommender-db:
+    driver: local
